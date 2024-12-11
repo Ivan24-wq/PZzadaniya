@@ -1,4 +1,4 @@
-#include "auth_module.hpp"
+#include "auth_module.hpp"  // для работы с библиотекой json
 #include "permission_manager.hpp"
 #include "mongo_manager.hpp"
 #include <bsoncxx/json.hpp>
