@@ -1,7 +1,7 @@
 import numpy as np
 import time
 
-# Определяем функцию f(x)
+# Определяем функцию f(x).
 def f(x):
     return 1 / (0.5 * np.sin(x) + 3 * np.cos(x))**2
 
@@ -20,7 +20,7 @@ def Runge(I2h, Ih, p=4):
     return abs(Ih - I2h) / (2**p - 1)
 
 # Подбор числа разбиений
-def chapter(a, b, eps=1e-4, n_min=2, n_max=100):
+def chapter(a, b, eps=1e-4, n_min=2, n_max=1000):
     n = n_min
     I_prev = Simpson(a, b, n)  
 
