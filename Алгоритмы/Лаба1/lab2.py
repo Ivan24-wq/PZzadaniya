@@ -3,8 +3,8 @@ import time
 
 # Реализация метода Монте-Карло
 def MonteKarlo(func, a, b, epsilon):
-    n = 1000
-    max_iteration = 1000000  
+    n = 1
+    max_iteration = 20
     interval_length = b - a
     iteration = 0
 
@@ -32,8 +32,7 @@ def MonteKarlo(func, a, b, epsilon):
             return integral_estimate, n
         # Увеличение числа точек
         n *= 2
-        if n > max_iteration:
-            raise ValueError(f"Не удалось достигнуть точности за {iteration} итераций. Текущее значение: {integral_estimate:.4f}, погрешность: {error_estimate:.4e}")
+       
 
 # Функция для интегрирования
 def F(x):
