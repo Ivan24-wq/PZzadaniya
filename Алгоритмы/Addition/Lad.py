@@ -3,7 +3,7 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 
-def Montekarlo(image_path, num_samples=100000):
+def Montekarlo(image_path, num_samples=1000000):
     # Загружаем изображение
     img = cv2.imread(image_path)
     if img is None:

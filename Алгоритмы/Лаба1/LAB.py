@@ -48,8 +48,8 @@ def chapter(a, b, eps=1e-4, n_min=2, n_max=1000):
 
 # Реализация метода Монте-Карло
 def MonteKarlo(func, a, b, epsilon):
-    n = 100
-    max_iteration = 100000  # Максимальное число точек
+    n = 100  # Начальное количество случайных точек
+    max_iteration = 100000  # Максимальное число итераций
     interval_length = b - a
     iteration = 0
 
@@ -57,6 +57,7 @@ def MonteKarlo(func, a, b, epsilon):
         iteration += 1
         iteration_start = time.time()
 
+        # Генерация случайных точек и вычисление значений функции
         x_random = np.random.uniform(a, b, n)
         f_value = func(x_random)
         integral_estimate = interval_length * np.mean(f_value)
@@ -68,19 +69,17 @@ def MonteKarlo(func, a, b, epsilon):
         iteration_end = time.time()
         iteration_time = iteration_end - iteration_start
 
-        # Отладочная информация
-        print(f"Монте-Карло - Итерация {iteration}:")
-        print(f"   Интеграл ≈ {integral_estimate:.4f}, Погрешность ≈ {error_estimate:.4e}, n = {n}")
-        print(f"   Время итерации: {iteration_time:.4f} сек")
+        # Печать промежуточных результатов
+        print(f"Итерация {iteration}: интеграл ≈ {integral_estimate:.4f}, погрешность ≈ {error_estimate:.4f}, время {iteration_time:.4f} с")
 
-        if error_estimate < epsilon:
-            return integral_estimate, n, iteration_end - iteration_start
+        # Условие завершения
+        if error_estimate < epsilon or iteration >= max_iteration:
+            break
 
-        # Увеличение числа точек
+        # Увеличиваем количество точек для повышения точности
         n *= 2
-        if n > max_iteration:
-            raise ValueError(f"Не удалось достигнуть точности за {iteration} итераций. "
-                             f"Текущее значение: {integral_estimate:.4f}, погрешность: {error_estimate:.4e}")
+
+    return integral_estimate, error_estimate, iteration
 
 
 # Сравнение методов
