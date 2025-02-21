@@ -34,7 +34,7 @@ def Montekarlo(image_path, num_samples=100000):
     return estimated_sea_area, (img, sample_points)
 
 
-image_path = r'D:\Algorithm\Algoritm\lab1\Addition\black sea.jpg'  
+image_path = "D:\\Algorithm\\algorihtm\Addition\\black sea.jpg"
 sea_area, result = Montekarlo(image_path)
 if sea_area is not None:
     print(f'Оценочная площадь Чёрного моря: {sea_area:.2f} км²')

@@ -3,7 +3,7 @@ import time
 
 # Функция для интегрирования
 def f(x):
-    return 1 / (0.5 * np.sin(x) + 3 * np.cos(x))**2
+    return 1 / (0.01 + abs(x))
 
 # Метод Симпсона
 def Simpson(a, b, n, y = None):
@@ -21,7 +21,7 @@ def Runge(I2h, Ih, p=4):
     return abs(Ih - I2h) / (2**p - 1)
 
 # Подбор числа разбиений
-def chapter(a, b, eps=1e-4, n_min=2, n_max=1000):
+def chapter(a, b, eps=1e-4, n_min=2, n_max=10000):
     n = n_min
     x_prev = np.linspace(a, b, n + 1)
     y_prev = f(x_prev)  # Вычисляем значения функции для начального разбиения
@@ -29,7 +29,7 @@ def chapter(a, b, eps=1e-4, n_min=2, n_max=1000):
 
     while n <= n_max:
         n *= 2
-        # Добавляем новые точки, вместо пересчета всей сетки
+        
         x_new = np.linspace(a, b, n + 1)
         y_new = np.empty(n + 1)
         y_new[::2] = y_prev  # Храним старые точки
@@ -47,40 +47,38 @@ def chapter(a, b, eps=1e-4, n_min=2, n_max=1000):
     raise ValueError("Не удалось достичь указанной точности")
 
 # Реализация метода Монте-Карло
-def MonteKarlo(func, a, b, epsilon):
-    n = 100
-    max_iteration = 100000  # Максимальное число точек
+def MonteKarlo(f, a, b, epsilon, initial_n=100, max_iteration=10000):
+    n = initial_n  # Начальное количество точек
     interval_length = b - a
     iteration = 0
-
+    
     while True:
         iteration += 1
-        iteration_start = time.time()
-
+        start_time = time.time()
+        
+        # Генерация случайных точек и вычисление значений функции
         x_random = np.random.uniform(a, b, n)
-        f_value = func(x_random)
+        f_value = f(x_random)
         integral_estimate = interval_length * np.mean(f_value)
 
-        # Погрешность
+        # Оценка дисперсии и ошибки
         variance = np.var(f_value)
         error_estimate = interval_length * np.sqrt(variance / n)
+        
+        # Время выполнения итерации
+        iteration_time = time.time() - start_time
 
-        iteration_end = time.time()
-        iteration_time = iteration_end - iteration_start
+        # Условие завершения
+        if error_estimate < epsilon or iteration >= max_iteration:
+            print(f"Итерация {iteration}: интеграл ≈ {integral_estimate:.6f}, "
+                  f"погрешность ≈ {error_estimate:.6f}, точки: {n}, "
+                  f"время {iteration_time:.4f} с")
+            break
 
-        # Отладочная информация
-        print(f"Монте-Карло - Итерация {iteration}:")
-        print(f"   Интеграл ≈ {integral_estimate:.4f}, Погрешность ≈ {error_estimate:.4e}, n = {n}")
-        print(f"   Время итерации: {iteration_time:.4f} сек")
+        # Увеличение числа точек (адаптивное)
+        n = int(n * (error_estimate / epsilon) ** 2)
 
-        if error_estimate < epsilon:
-            return integral_estimate, n, iteration_end - iteration_start
-
-        # Увеличение числа точек
-        n *= 2
-        if n > max_iteration:
-            raise ValueError(f"Не удалось достигнуть точности за {iteration} итераций. "
-                             f"Текущее значение: {integral_estimate:.4f}, погрешность: {error_estimate:.4e}")
+    return integral_estimate, error_estimate, iteration
 
 
 # Сравнение методов
@@ -91,10 +89,10 @@ def compare_methods(a, b, epsilon):
         simpson_integral, simp_points, simp_error = chapter(a, b, epsilon)
         end_simp = time.time()
         print(f"\nМетод Симпсона:")
-        print(f"   Значение интеграла: {simpson_integral:.4f}")
+        print(f"   Значение интеграла: {simpson_integral:.8f}")
         print(f"   Число разбиений: {simp_points}")
         print(f"   Погрешность: {simp_error:.4e}")
-        print(f"   Время выполнения: {end_simp - start_simp:.4f} сек")
+        print(f"   Время выполнения: {end_simp - start_simp:.8f} сек")
     except ValueError as e:
         print(e)
         return
@@ -121,7 +119,7 @@ def compare_methods(a, b, epsilon):
 # Основной блок выполнения
 if __name__ == "__main__":
     # Границы интегрирования(указанные в задании)
-    a, b = 0, 1.6
+    a, b = -1, 1
     epsilon = 1e-4
 
     compare_methods(a, b, epsilon)
