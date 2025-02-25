@@ -3,57 +3,76 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 
-def Montekarlo(image_path, num_samples=1000000):
+def MonteCarlo(image_path, num_samples=1000000, num_trials=5):
     # Загружаем изображение
     img = cv2.imread(image_path)
     if img is None:
         print("Ошибка: изображение не загружено. Проверьте путь к файлу.")
-        return None, None
-    
-    #Точки
+        return None
+
+    # Преобразуем изображение в бинарное (чёрное и белое)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     _, binary = cv2.threshold(gray, 100, 255, cv2.THRESH_BINARY_INV)
-    
+
     # Получаем размеры изображения
     height, width = binary.shape
-    total_area = 856440  
-    
-    # Генерируем случайные точки и считаем, сколько попало в море (белый цвет)
-    sea_points = 0
-    sample_points = []
-    for _ in range(num_samples):
-        x, y = random.randint(0, width - 1), random.randint(0, height - 1)
-        sample_points.append((x, y, binary[y, x] == 255))
-        if binary[y, x] == 255:
-            sea_points += 1
-    
-    # Вычисляем долю точек, попавших в море
-    sea_ratio = sea_points / num_samples
-    estimated_sea_area = sea_ratio * total_area
-    
-    return estimated_sea_area, (img, sample_points)
+    total_area = 856440  # Общая площадь области (например, вся карта в кв. км)
 
+    # Список для хранения результатов
+    areas = []
+    all_points = []  # Сохраняем все точки для визуализации
 
-image_path = r'D:\Algorithm\Algoritm\lab1\Addition\black sea.jpg'  
-sea_area, result = Montekarlo(image_path)
-if sea_area is not None:
-    print(f'Оценочная площадь Чёрного моря: {sea_area:.2f} км²')
+    for trial in range(num_trials):
+        sea_points = 0
+        trial_points = []  # Точки текущего испытания
 
-    # Визуализация
-    img, sample_points = result
+        # Генерируем случайные точки и подсчитываем попадания в море (белый цвет)
+        for _ in range(num_samples):
+            x, y = random.randint(0, width - 1), random.randint(0, height - 1)
+            is_sea = binary[y, x] == 255
+            trial_points.append((x, y, is_sea))
+            if is_sea:
+                sea_points += 1
+
+        # Вычисляем долю точек, попавших в море
+        sea_ratio = sea_points / num_samples
+        estimated_sea_area = sea_ratio * total_area
+
+        # Сохраняем результат для текущего испытания
+        areas.append(estimated_sea_area)
+        all_points.extend(trial_points)  # Добавляем точки текущего испытания к общим
+        print(f"Испытание {trial + 1}: Оценочная площадь Чёрного моря = {estimated_sea_area:.2f} км²")
+
+    # Вычисляем среднее значение и стандартное отклонение
+    mean_area = np.mean(areas)
+    std_dev = np.sqrt(np.mean(np.square(areas)) - np.square(mean_area))
+
+    print(f"\nОкончательная оценка площади Чёрного моря: {mean_area:.2f} км² ± {std_dev:.2f} км²")
+
+    return mean_area, std_dev, img, binary, all_points
+
+# Путь к изображению
+image_path = r'D:\Algorithm\Algoritm\Addition\black sea.jpg'
+
+# Запускаем алгоритм
+mean_area, std_dev, img, binary, all_points = MonteCarlo(image_path, num_samples=100000, num_trials=6)
+
+# Визуализация
+if img is not None:
     plt.figure(figsize=(10, 8))
     plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-    
-    sea_x = [x for x, y, is_sea in sample_points if is_sea]
-    sea_y = [y for x, y, is_sea in sample_points if is_sea]
-    land_x = [x for x, y, is_sea in sample_points if not is_sea]
-    land_y = [y for x, y, is_sea in sample_points if not is_sea]
-    
-    plt.scatter(sea_x, sea_y, color='blue', s=1, label="Черное море")
+
+    # Разделяем точки на море и сушу
+    sea_x = [x for x, y, is_sea in all_points if is_sea]
+    sea_y = [y for x, y, is_sea in all_points if is_sea]
+    land_x = [x for x, y, is_sea in all_points if not is_sea]
+    land_y = [y for x, y, is_sea in all_points if not is_sea]
+
+    # Рисуем точки
+    plt.scatter(sea_x, sea_y, color='blue', s=1, label="Море")
     plt.scatter(land_x, land_y, color='red', s=1, label="Суша")
-    
-    plt.xlabel('X координата')
-    plt.ylabel('Y координата')
-    plt.title('Метод Монте-Карло: Черное море')
+
+    plt.title("Метод Монте-Карло: Оценка площади Чёрного моря")
     plt.legend()
+    plt.axis("off")
     plt.show()

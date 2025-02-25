@@ -29,7 +29,7 @@ def chapter(a, b, eps=1e-4, n_min=2, n_max=1000):
 
     while n <= n_max:
         n *= 2
-        # Добавляем новые точки, вместо пересчета всей сетки
+        
         x_new = np.linspace(a, b, n + 1)
         y_new = np.empty(n + 1)
         y_new[::2] = y_prev  # Храним старые точки
