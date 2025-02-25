@@ -16,15 +16,15 @@ def MonteCarlo(image_path, num_samples=1000000, num_trials=5):
 
     # Получаем размеры изображения
     height, width = binary.shape
-    total_area = 856440  # Общая площадь области (например, вся карта в кв. км)
+    total_area = 856440  #
 
-    # Список для хранения результатов
+    
     areas = []
-    all_points = []  # Сохраняем все точки для визуализации
+    all_points = []  
 
     for trial in range(num_trials):
         sea_points = 0
-        trial_points = []  # Точки текущего испытания
+        trial_points = []  
 
         # Генерируем случайные точки и подсчитываем попадания в море (белый цвет)
         for _ in range(num_samples):
@@ -34,13 +34,13 @@ def MonteCarlo(image_path, num_samples=1000000, num_trials=5):
             if is_sea:
                 sea_points += 1
 
-        # Вычисляем долю точек, попавших в море
+        
         sea_ratio = sea_points / num_samples
         estimated_sea_area = sea_ratio * total_area
 
-        # Сохраняем результат для текущего испытания
+        
         areas.append(estimated_sea_area)
-        all_points.extend(trial_points)  # Добавляем точки текущего испытания к общим
+        all_points.extend(trial_points)  
         print(f"Испытание {trial + 1}: Оценочная площадь Чёрного моря = {estimated_sea_area:.2f} км²")
 
     # Вычисляем среднее значение и стандартное отклонение
@@ -54,7 +54,7 @@ def MonteCarlo(image_path, num_samples=1000000, num_trials=5):
 # Путь к изображению
 image_path = r'D:\Algorithm\Algoritm\Addition\black sea.jpg'
 
-# Запускаем алгоритм
+
 mean_area, std_dev, img, binary, all_points = MonteCarlo(image_path, num_samples=100000, num_trials=6)
 
 # Визуализация
@@ -68,7 +68,7 @@ if img is not None:
     land_x = [x for x, y, is_sea in all_points if not is_sea]
     land_y = [y for x, y, is_sea in all_points if not is_sea]
 
-    # Рисуем точки
+  
     plt.scatter(sea_x, sea_y, color='blue', s=1, label="Море")
     plt.scatter(land_x, land_y, color='red', s=1, label="Суша")
 
