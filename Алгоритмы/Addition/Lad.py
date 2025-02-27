@@ -3,7 +3,7 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 
-def MonteCarlo(image_path, num_samples=1000000, num_trials=5):
+def MonteCarlo(image_path, num_samples=1000000, num_trials=10):
     # Загружаем изображение
     img = cv2.imread(image_path)
     if img is None:
@@ -41,18 +41,18 @@ def MonteCarlo(image_path, num_samples=1000000, num_trials=5):
         
         areas.append(estimated_sea_area)
         all_points.extend(trial_points)  
-        print(f"Испытание {trial + 1}: Оценочная площадь Чёрного моря = {estimated_sea_area:.2f} км²")
+        print(f"Повторение {trial + 1}:  Площадь  Чёрного моря = {estimated_sea_area:.2f} км²")
 
     # Вычисляем среднее значение и стандартное отклонение
     mean_area = np.mean(areas)
     std_dev = np.sqrt(np.mean(np.square(areas)) - np.square(mean_area))
 
-    print(f"\nОкончательная оценка площади Чёрного моря: {mean_area:.2f} км² ± {std_dev:.2f} км²")
+    print(f"\nОкончатель площади Чёрного моря: {mean_area:.2f} км² ± {std_dev:.2f} км²")
 
     return mean_area, std_dev, img, binary, all_points
 
 # Путь к изображению
-image_path = r'D:\Algorithm\Algoritm\Addition\black sea.jpg'
+image_path = r'C:\Users\User\Desktop\Algorihtm\black sea.jpg'
 
 
 mean_area, std_dev, img, binary, all_points = MonteCarlo(image_path, num_samples=100000, num_trials=6)
