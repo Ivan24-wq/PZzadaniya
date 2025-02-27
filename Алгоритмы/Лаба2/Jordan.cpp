@@ -1,55 +1,90 @@
 #include <iostream>
 #include <vector>
-#include<iomanip>
+#include <iomanip>
 #include <cmath>
 using namespace std;
-// Функция вывода матрицы
 
-void printMatrix(vector<vector<double>>& matrix){
-    for(const auto& row : matrix){
-        for(double value : row){
-            cout << setw(10) << fixed << setprecision(4) << value << " ";
+// Функция для вывода матрицы
+void printMatrix(vector<vector<float>>& matrix) {
+    int k = matrix[0].size(); 
+    for (const auto& row : matrix) {
+        for (int g = 0; g < k; g++) {
+            if (g == k - 1) { 
+                cout << " | ";
+            }
+            cout << setw(5) << fixed << setprecision(2) << row[g] << " ";
         }
         cout << endl;
     }
     cout << endl;
 }
 
-// Гаусса-Жордана
-bool Gaussjordann(vector<vector<double>>& matrix){
-    int n = matrix.size(); //Строки
-    int m = matrix[0].size();  //Строки
+// Метод Гаусса-Жордана
+bool GaussJordan(vector<vector<float>>& matrix) {
+    int n = matrix.size();    
+    int m = matrix[0].size(); 
 
-    // Строка с максимальным элементом
-    for(int col = 0; col < n; col++){
+    for (int col = 0; col < n; col++) {
+        // Найти строку с максимальным элементом в текущем столбце
         int pivotRow = col;
-        for(int i = col + 1; i < n; i++){
-            if(fabs(matrix[i][col]) > fabs(matrix[pivotRow][col])){
+        for (int i = col + 1; i < n; i++) {
+            if (fabs(matrix[i][col]) > fabs(matrix[pivotRow][col])) {
                 pivotRow = i;
             }
         }
-        if(fabs(matrix[pivotRow][col]) < 1e-9){
-            cerr << "Нет решения!";
+
+        
+        if (fabs(matrix[pivotRow][col]) < 1e-9) {
+            cerr << "Нет решения!\n";
             return false;
         }
-        swap(matrix[col], matrix[pivotRow]); // Менякм текущую строку со строкой главного элемента
+
+        
+        swap(matrix[col], matrix[pivotRow]);
+
+        // Приведение ведущего элемента к 1
         double pivot = matrix[col][col];
-        for(int j = 0; j < m; j++){
+        for (int j = 0; j < m; j++) {
             matrix[col][j] /= pivot;
         }
 
-        // Обращаем остальные элементы в 0
-        for(int h = 0; h < n; h++){
-            if( h != col){
-                double factor = matrix[h][col];
-                for(int t = 0; t < m; t++){
-                    matrix[h][t] = - factor * matrix[col][t];
+        
+        for (int i = 0; i < n; i++) {
+            if (i != col) {
+                double factor = matrix[i][col];
+                for (int j = 0; j < m; j++) {
+                    matrix[i][j] -= factor * matrix[col][j];
                 }
             }
         }
     }
+
     return true;
 }
-int main(){
-    setlocale(LC_ALL, "RU");
+
+int main() {
+    
+    vector<vector<float>> matrix = {
+        {5, 1, -1, -5},
+        {-1, 3, -1, 5},
+        {1, -2, 4, 1}
+    };
+
+    cout << "Введённая матрица:\n";
+    printMatrix(matrix);
+
+    
+    if (GaussJordan(matrix)) {
+        cout << "Vетода Гаусса-Жордана:\n";
+        printMatrix(matrix);
+
+        cout << "Ответ:\n";
+        for (int i = 0; i < matrix.size(); i++) {
+            cout << "x" << i + 1 << " = " << matrix[i].back() << endl;
+        }
+    } else {
+        cout << "Нет решений!\n";
+    }
+
+    return 0;
 }
