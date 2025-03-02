@@ -2,14 +2,16 @@
 #include <vector>
 #include <iomanip>
 #include <cmath>
+#include <chrono> 
 using namespace std;
+using namespace chrono;
 
 // Функция для вывода матрицы
 void printMatrix(vector<vector<float>>& matrix) {
-    int k = matrix[0].size(); 
+    int k = matrix[0].size();
     for (const auto& row : matrix) {
         for (int g = 0; g < k; g++) {
-            if (g == k - 1) { 
+            if (g == k - 1) {
                 cout << " | ";
             }
             cout << setw(5) << fixed << setprecision(2) << row[g] << " ";
@@ -21,8 +23,8 @@ void printMatrix(vector<vector<float>>& matrix) {
 
 // Метод Гаусса-Жордана
 bool GaussJordan(vector<vector<float>>& matrix) {
-    int n = matrix.size();    
-    int m = matrix[0].size(); 
+    int n = matrix.size();
+    int m = matrix[0].size();
 
     for (int col = 0; col < n; col++) {
         // Найти строку с максимальным элементом в текущем столбце
@@ -39,16 +41,15 @@ bool GaussJordan(vector<vector<float>>& matrix) {
             return false;
         }
 
-        
         swap(matrix[col], matrix[pivotRow]);
 
-        // Приведение ведущего элемента к 1
+        
         double pivot = matrix[col][col];
         for (int j = 0; j < m; j++) {
             matrix[col][j] /= pivot;
         }
 
-        
+        // Обнуление остальных элементов в столбце
         for (int i = 0; i < n; i++) {
             if (i != col) {
                 double factor = matrix[i][col];
@@ -63,7 +64,7 @@ bool GaussJordan(vector<vector<float>>& matrix) {
 }
 
 int main() {
-    
+    setlocale(LC_ALL, "RU");
     vector<vector<float>> matrix = {
         {5, 1, -1, -5},
         {-1, 3, -1, 5},
@@ -73,16 +74,23 @@ int main() {
     cout << "Введённая матрица:\n";
     printMatrix(matrix);
 
-    
+    // Время выполнения алгоритма
+    auto start = high_resolution_clock::now(); 
     if (GaussJordan(matrix)) {
-        cout << "Vетода Гаусса-Жордана:\n";
+        auto end = high_resolution_clock::now(); 
+        auto duration = duration_cast<microseconds>(end - start); 
+
+        cout << "Время выполнения алгоритма: " << duration.count() << " мк.\n";
+
+        cout << "Матрица: \n";
         printMatrix(matrix);
 
         cout << "Ответ:\n";
         for (int i = 0; i < matrix.size(); i++) {
             cout << "x" << i + 1 << " = " << matrix[i].back() << endl;
         }
-    } else {
+    }
+    else {
         cout << "Нет решений!\n";
     }
 
