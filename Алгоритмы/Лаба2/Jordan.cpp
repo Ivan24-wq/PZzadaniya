@@ -6,7 +6,7 @@
 using namespace std;
 using namespace chrono;
 
-// Функция для вывода матрицы
+// Вывод матрицы
 void printMatrix(vector<vector<float>>& matrix) {
     int k = matrix[0].size();
     for (const auto& row : matrix) {
@@ -20,7 +20,6 @@ void printMatrix(vector<vector<float>>& matrix) {
     }
     cout << endl;
 }
-
 // Метод Гаусса-Жордана
 bool GaussJordan(vector<vector<float>>& matrix) {
     int n = matrix.size();
