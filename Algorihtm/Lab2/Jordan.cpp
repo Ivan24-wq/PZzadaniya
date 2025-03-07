@@ -6,7 +6,7 @@
 using namespace std;
 using namespace chrono;
 
-// Вывод матрицы
+// Функция для вывода матрицы
 void printMatrix(vector<vector<float>>& matrix) {
     int k = matrix[0].size();
     for (const auto& row : matrix) {
@@ -20,27 +20,29 @@ void printMatrix(vector<vector<float>>& matrix) {
     }
     cout << endl;
 }
+
 // Метод Гаусса-Жордана
 bool GaussJordan(vector<vector<float>>& matrix) {
     int n = matrix.size();
     int m = matrix[0].size();
 
     for (int col = 0; col < n; col++) {
-        // Найти строку с максимальным элементом в текущем столбце
+        // Нахожу вудущий элемент (максимальный)
         int pivotRow = col;
         for (int i = col + 1; i < n; i++) {
             if (fabs(matrix[i][col]) > fabs(matrix[pivotRow][col])) {
                 pivotRow = i;
             }
         }
-
-        
+        // Проверка(если больше ведущего элемента)
         if (fabs(matrix[pivotRow][col]) < 1e-9) {
             cerr << "Нет решения!\n";
             return false;
         }
 
         swap(matrix[col], matrix[pivotRow]);
+        cout << "Промежуточное преобразование: " << col + 1 << " и " << pivotRow << +1 << " :\n";
+        printMatrix(matrix);
 
         
         double pivot = matrix[col][col];
@@ -48,16 +50,18 @@ bool GaussJordan(vector<vector<float>>& matrix) {
             matrix[col][j] /= pivot;
         }
 
-        // Обнуление остальных элементов в столбце
+        // Обнуляю остальные элементы в столбце
         for (int i = 0; i < n; i++) {
             if (i != col) {
                 double factor = matrix[i][col];
                 for (int j = 0; j < m; j++) {
                     matrix[i][j] -= factor * matrix[col][j];
                 }
+ 
             }
         }
     }
+    
 
     return true;
 }
@@ -65,9 +69,9 @@ bool GaussJordan(vector<vector<float>>& matrix) {
 int main() {
     setlocale(LC_ALL, "RU");
     vector<vector<float>> matrix = {
-        {5, 1, -1, -5},
-        {-1, 3, -1, 5},
-        {1, -2, 4, 1}
+        {23, 83, 10, 20},
+        {21, 4, 70, 9},
+        {64, 35, 10, 5}
     };
 
     cout << "Введённая матрица:\n";
@@ -79,7 +83,7 @@ int main() {
         auto end = high_resolution_clock::now(); 
         auto duration = duration_cast<microseconds>(end - start); 
 
-        cout << "Время выполнения алгоритма: " << duration.count() << " мк.\n";
+        cout << "Время выполнения алгоритма: " << duration.count() << " мкс.\n";
 
         cout << "Матрица: \n";
         printMatrix(matrix);

@@ -3,7 +3,7 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 
-def MonteCarlo(image_path, num_samples=1000000, num_trials=10):
+def MonteCarlo(image_path, num_samples=100000, num_trials=10):
     # Загружаем изображение
     img = cv2.imread(image_path)
     if img is None:
@@ -55,7 +55,7 @@ def MonteCarlo(image_path, num_samples=1000000, num_trials=10):
 image_path = r'C:\Users\User\Desktop\Algorihtm\black sea.jpg'
 
 
-mean_area, std_dev, img, binary, all_points = MonteCarlo(image_path, num_samples=100000, num_trials=6)
+mean_area, std_dev, img, binary, all_points = MonteCarlo(image_path, num_samples=1000000, num_trials=6)
 
 # Визуализация
 if img is not None:
