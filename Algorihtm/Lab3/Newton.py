@@ -1,5 +1,6 @@
 import numpy as np
 import time
+import math
 
 # Задаём уравнение
 def f(x):
@@ -37,16 +38,25 @@ def Dichotomy(f, a, b, eps=1e-4, delt=1e-6):
             b = x
         else:
             a = x
-
     # Возвращаем середину интервала
     end_time = time.time()
     print(f"Время выполнения алгоритма: {end_time - start_time:.8f}с")
     return (a + b) / 2
 
+    #Количество итерация для нахождения заданной точности
+def iteration(a, b, eps):
+    interval_length = b - a
+    return math.ceil(math.log(interval_length / eps) / math.log(2))
+
 # Поиск интервала изменения знака
 interval = change(f, -10, 10, step=0.1)
 if interval:
+    a, b = interval
+    eps = 1e-4
     print(f"Функция меняет знак на интервале: ({interval[0]:.4f}, {interval[1]:.4f})")
+    #Вывод количества итераций
+    n = iteration(a, b, eps)
+    print(f"Достигли точность за: {n} итераций")
     # Нахождение корня на указанном интервале
     root = Dichotomy(f, *interval, eps=1e-4, delt=1e-6)
     print(f"Корень уравнения: {root:.4f}")
