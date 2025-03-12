@@ -62,10 +62,8 @@ bool GaussJordan(vector<vector<float>>& matrix) {
         }
     }
     
-
     return true;
 }
-
 int main() {
     setlocale(LC_ALL, "RU");
     vector<vector<float>> matrix = {
