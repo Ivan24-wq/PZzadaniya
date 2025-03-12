@@ -1,8 +1,9 @@
 import numpy as np
+import time
 
 # Задаём уравнение
 def f(x):
-    return np.exp(-x) + x**2 -2
+    return np.exp(-x) + x**2 - 2
 
 # Интервал, где функция меняет знак
 def change(f, start, end, step=0.1):
@@ -18,12 +19,17 @@ def Dichotomy(f, a, b, eps=1e-4, delt=1e-6):
     if f(a) * f(b) > 0:
         raise ValueError("На интервале [{}, {}] функция не меняет знак".format(a, b))
 
+    # Запуск таймера
+    start_time = time.time()
+
     while (b - a) / 2 > eps:
         x = (a + b) / 2
         f_x = f(x)
         
         # Проверка на сходимость
         if abs(f_x) < delt:
+            end_time = time.time()
+            print(f"Время выполнения алгоритма: {end_time - start_time:.8f}с")
             return x
 
         # Уменьшаем интервал
@@ -33,6 +39,8 @@ def Dichotomy(f, a, b, eps=1e-4, delt=1e-6):
             a = x
 
     # Возвращаем середину интервала
+    end_time = time.time()
+    print(f"Время выполнения алгоритма: {end_time - start_time:.8f}с")
     return (a + b) / 2
 
 # Поиск интервала изменения знака
