@@ -10,7 +10,7 @@ def f(x):
 def g(x):
     return 2 * x - np.exp(-x)
 
-# Поиск интервала, где функция меняет знак
+# Ищем интервал, где функция меняет знак
 def change(f, start, end, step=0.1):
     x = start
     while x < end:
@@ -41,7 +41,7 @@ def Dichotomy(f, a, b, eps=1e-4):
     return (a + b) / 2
 
 # Метод Ньютона
-def Newton(f, g, x0, eps=1e-4, max_iteration=10000):
+def Newton(f, g, x0, eps=1e-4, max_iteration=100):
     start_time = time.time()
     x = x0
     for i in range(max_iteration):
@@ -65,12 +65,12 @@ def Newton(f, g, x0, eps=1e-4, max_iteration=10000):
     print(f"Метод Ньютона выполнен за: {end_time - start_time:.8f}с")
     raise ValueError("Недостаточное количество итераций")
 
-# Подсчёт количества итераций для метода Дихотомии
+# Считаем количества итераций для метода Дихотомии
 def iteration_count(a, b, eps):
     interval_length = b - a
     return math.ceil(math.log(interval_length / eps) / math.log(2))
 
-# Сравнение методов
+# Сравниваем  методов
 def Answer(f, g, a, b, eps=1e-4):
     
     root_Dichotomy = Dichotomy(f, a, b, eps)
@@ -78,13 +78,14 @@ def Answer(f, g, a, b, eps=1e-4):
 
     
     root_Newton = Newton(f, g, root_Dichotomy, eps)
-    print(f"МетодНьютона: {root_Newton:.6f}")
+    print(f"Метод Ньютона: {root_Newton:.6f}")
     return root_Newton
 
 # Запуск
 if __name__ == "__main__":
     start, end, step = -10, 10, 0.1
     eps = 1e-4
+    
 
     # Поиск интервала изменения знака
     interval = change(f, start, end, step)
