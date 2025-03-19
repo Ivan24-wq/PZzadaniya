@@ -21,16 +21,16 @@ class Phylofod(threading.Thread):
     def dine(self):
         first_fork, second_fork = ((self.left_fork, self.right_fork) if id(self.left_fork) < id(self.right_fork) else (self.right_fork, self.left_fork))
         with first_fork:
-            print(f"{self.name} Философ взял первуб вилку")
+            print(f"{self.name} Философ взял первую вилку")
             with second_fork:
-                print(f"{self.name} Философ взфл вторую вилку")
+                print(f"{self.name} Философ взял вторую вилку")
                 time.sleep(random.uniform(1,3))
                 print(f"{self.name} Философ закончил есть и положит вилки на стол")
 #Условие задачи
 n = 5
 forks = [threading.Lock() for _ in range(n)]
 philosofs = [
-    Phylofod(f"Философ {n + 1}", forks[i], forks[(i + 1) % n])
+    Phylofod(f"Философ {i + 1}", forks[i], forks[(i + 1) % n])
     for i in range(n)
 ]
 #Бесконечный цикл
