@@ -1,4 +1,5 @@
 import numpy as np
+import time
 
 def NewtonRafson(F, J, X0, tol=1e-6, max_iteration=1000):
     X = X0
@@ -7,7 +8,6 @@ def NewtonRafson(F, J, X0, tol=1e-6, max_iteration=1000):
         J_value = J(X)  # Матрица Якоби
         delta_X = np.linalg.solve(J_value, -F_value)
 
-        
         X = X + delta_X
 
         # Проверка условия 
@@ -35,8 +35,11 @@ def J(X):
 X0 = np.array([0.0, 0.0])
 
 # Решение
+start_time = time.time()
 try:
     solution = NewtonRafson(F, J, X0)
+    end_time = time.time()
     print("Ответ: ", solution)
+    print(f"Время затраченное на выполнения алгоритма: {end_time - start_time:.4f} с")
 except ValueError as e:
     print(e)
