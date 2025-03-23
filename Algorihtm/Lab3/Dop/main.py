@@ -7,6 +7,7 @@ def NewtonRafson(F, J, X0, tol=1e-6, max_iteration=1000):
         J_value = J(X)
         
         try:
+            
             delta_X = np.linalg.solve(J_value, -F_value)
         except np.linalg.LinAlgError:
             raise ValueError("Матрица Якоби не обратима.")
@@ -23,29 +24,28 @@ def NewtonRafson(F, J, X0, tol=1e-6, max_iteration=1000):
 def F(X):
     a, b, h, x, y, z = X
     return np.array([
-        x**2 + y**2 - h - 1,
-        np.exp(y**2) - x**4 + z - 5,
-        np.sin(x) + 2 * b, 
-        x * a - y * b - 6, 
-        np.log(1 + z**2) - h * a + 1,
-        x**2 + b**3 - z - 4
+        x**2 + y**2 +z**2 -3,
+        x * y * z -1,
+        h - x - y,
+        a - y - z,
+        b - z- x,
+        h + a + b - 6
     ])
 
 # Матрица Якоби (частные производные)
 def J(X):
     a, b, h, x, y, z = X
-    epsilon = 1e-8  # Для избежания деления на ноль
     return np.array([
-        [2 * x, 2 * y, -1, 0, 0, 0],
-        [-4 * x**3, 2 * y * np.exp(y**2), 0, 0, 0, 1],
-        [np.cos(x), 2, 0, 0, 0, 0],
-        [a, -b, 0, x, -y, 0],
-        [0, 0, -a, 0, 0, (2 * z / (x**2 + epsilon)) + 1],  # Исправлено
-        [2 * x, 3 * b**2, 0, 0, 0, -1]
+        [2 * x, 2 * y, 2 *z, 0, 0, 0],
+        [y * z, x * z, x * y, 0, 0, 0],
+        [-1, -1, 0, 1, 0, 0],
+        [0, -1, -1, 0, 1, 0],
+        [-1, 0, -1, 0, 0, 1],
+        [0, 0, 0, 1, 1, 1]
     ])
 
 # Начальное приближение
-X0 = np.array([1.0, 1.0, 1.0, 1.0, 1.0, 1.0])  # Установлено ненулевое начальное значение
+X0 = np.array([1.0, 1.0, 1.0, 1.0, 1.0, 1.0])  
 
 try:
     solution = NewtonRafson(F, J, X0)
