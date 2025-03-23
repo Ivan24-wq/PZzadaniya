@@ -1,5 +1,4 @@
 import numpy as np
-import time
 
 def NewtonRaphson(F, J, X0, tol=1e-6, max_iteration=1000):
     X = X0
@@ -11,8 +10,6 @@ def NewtonRaphson(F, J, X0, tol=1e-6, max_iteration=1000):
             raise ValueError("Матрица Якоби вырожденная, невозможно решить систему.")
 
         delta_X = np.linalg.solve(J_value, -F_value)
-
-        
         X = X + delta_X
         # Проверка, что изменение решения достаточно маленькое (проверка сходимости)
         
@@ -38,9 +35,18 @@ def J(X):
 # Начальное приближение
 X0 = np.array([0.0, 0.0])
 
-# Решение
+# Решение системы
 try:
-    solution = NewtonRafson(F, J, X0)
-    print("Ответ: ", solution)
+    solution = NewtonRaphson(F, J, X0)
+    print("\nОтвет:", solution)
+
+    # Проверка результата
+    F_solution = F(solution)
+    print("\nПроверка решения:")
+    print("F(X):", F_solution)
+    if np.allclose(F_solution, 0, atol=1e-6):
+        print("Решение корректно, значения функций близки к нулю.")
+    else:
+        print("Решение некорректно, значения функций не равны нулю.")
 except ValueError as e:
-    print(e)
+    print("\nОшибка:", e)
