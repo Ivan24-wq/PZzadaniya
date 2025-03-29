@@ -6,6 +6,7 @@ x0, x1, x2 = map(float, input("Введите через пробел точки
 # Заданная функция
 def Function(x):
     return x**2
+
 # Считаем значения функции
 y0 = Function(x0)
 y1 = Function(x1)
@@ -29,7 +30,6 @@ def Interpolation(x0, x1, x2, y0, y1, y2):
     
     return x_min
 
-# Выполнение интерполяции
 try:
     x_min = Interpolation(x0, x1, x2, y0, y1, y2)
     y_min = Function(x_min)

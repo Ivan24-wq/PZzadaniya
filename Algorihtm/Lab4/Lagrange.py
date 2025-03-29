@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 from sympy import symbols, lambdify, simplify
 
 # Исходные данные
-x_val = [1, 2, 3, 4, 5]
-y_val = [8.2, 5.9, 4.9, 4, 3.2]
+x_val = [1, 2, 3, 4, 5, ]
+y_val = [4, 5.9, 2, 4, 3.2]
 
 # Функция для построения базисного полинома Лагранжа
 def lagrange_basis(x_val, x, i):
