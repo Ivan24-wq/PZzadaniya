@@ -25,25 +25,26 @@ def f(x):
 a = -np.pi
 b = np.pi
 T = b - a
-M = 6
+M = 10
 
-a0 = 2 / T * Simpson(f, a, b)
+a0 = (1 / np.pi) * Simpson(f, a, b)
 ak = []
 bk = []
 
 #Посчитаем коефициенты
 for k in range(1, M + 1):
-    ak_f = lambda x: f(x) * np.cos(k * np.pi * x / (T / 2))
-    bk_f = lambda x: f(x) * np.sin(k * np.pi * x / (T / 2))
-    ak_val = (1 / T) * Simpson(ak_f, a, b)
-    bk_val = (1 / T) * Simpson(bk_f, a, b)
+    ak_f = lambda x: f(x) * np.cos(k * x)
+    bk_f = lambda x: f(x) * np.sin(k * x)
+    ak_val = (1 / np.pi) * Simpson(ak_f, a, b)
+    bk_val = (1 / np.pi) * Simpson(bk_f, a, b)
     ak.append(ak_val)
     bk.append(bk_val)
+
 #Разложение в ряд Фурье
 def Furier(x):
-    result = a0 / 2
+    result = (a0 / 2)
     for k in range(1, M + 1):
-        result += ak[k - 1] * np.cos(k * np.pi * x / (T / 2)) + bk[k - 1] * np.sin(k * np.pi * x / (T / 2))
+        result += ak[k - 1] * np.cos(k * x) + bk[k - 1] * np.sin(k * x)
     return result
 
 x_vals = np.linspace(a, b, 1000)
