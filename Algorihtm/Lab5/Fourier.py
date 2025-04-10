@@ -24,7 +24,6 @@ def f(x):
 # коефициенты
 a = -np.pi
 b = np.pi
-T = b - a
 M = 10
 
 a0 = (1 / np.pi) * Simpson(f, a, b)
@@ -60,4 +59,3 @@ plt.ylabel('y')
 plt.grid(True)
 plt.legend()
 plt.show()
-
