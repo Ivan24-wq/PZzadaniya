@@ -18,13 +18,13 @@ def Simpson(f, a, b, n=1000):
 
 # Моя Функция
 def f(x):
-    return np.abs(np.cos(3 * x))
+    return np.sin(x**2)
 
 
 # коефициенты
 a = -np.pi
 b = np.pi
-M = 10
+M = 9
 
 a0 = (1 / np.pi) * Simpson(f, a, b)
 ak = []
@@ -52,7 +52,7 @@ f_approximation = [Furier(x) for x in x_vals]
 
 #Строим график
 plt.plot(x_vals, f_original, label="Исходная функция", linestyle='-', color='red')
-plt.plot(x_vals, f_approximation, label=f"Ряд Фурье (M={M})", linestyle='--', color='black')
+plt.plot(x_vals, f_approximation, label=f"Ряд Фурье (M={M})", linestyle='-', color='green')
 plt.title("Апроксимация рядом Фурье")
 plt.xlabel('x')
 plt.ylabel('y')
