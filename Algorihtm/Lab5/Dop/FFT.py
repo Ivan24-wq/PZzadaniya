@@ -1,24 +1,35 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+#Рекурсивная реализация БПФ
+def fft(x):
+    N = len(x) #Входные данные
+    if N == 1:
+        return x
 
-"""Быстрое разложение Фурье
-Создадим сигнал - сумма синусоидов"""
-#Частота Дискредитации
-Fs = 500
-#Последнюю точку не учитываю в массив
-k = np.linspace(0, 1, Fs, endpoint = False)
-sign = 3 * np.sin(2 * np.pi * 60 * k) + 2 * np.sin(2 * np.pi * 120 * k) + np.sin(2 * np.pi * 200 * k)
+    #используем разделение ДПФ
+    even = fft(x[::2]) #Четные
+    odd = fft(x[1::2]) #Нечетные
 
-#Реализазия БПФ
-fft_res = np.fft.fft(sign)
-freq = np.fft.fftfreq(len(k), 1 /Fs)
+    #Поворачивающий множитель
+    W = [np.exp(-2j * 2 * np.pi * k / N) * odd[k] for k in range(N // 2)]
 
-#Строим график
-plt.figure(figsize=(10, 4 ))
-plt.plot(freq[:Fs // 2], np.abs(fft_res)[:Fs // 2] * 2 / Fs)
-plt.title("Спектр Сигнала")
-plt.xlabel("Частота")
-plt.ylabel("Амплитуда")
-plt.grid()
+    #Комбинирование результатов
+    X = [even[k] + W[k] for k in range(N // 2)] + \
+        [even[k] - W[k] for k in range(N // 2)]
+    return X 
+
+#Моя функция
+N = 3
+x = np.linspace(0, 2 * np.pi, N, endpoint=False)
+y = np.sin(x**2)
+
+
+#Постором график
+plt.plot(x, y, label="Быстрое преобразование Фурье", linestyle='-', color='red')
+plt.title("БПФ")
+plt.xlabel('x')
+plt.ylabel('y')
+plt.grid(True)
+plt.legend()
 plt.show()
