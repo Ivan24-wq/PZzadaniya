@@ -20,7 +20,7 @@ def fft(x):
     return X 
 
 #Моя функция
-N = 6
+N = 10
 x = np.linspace(0, 2 * np.pi, N, endpoint=False)
 y = np.sin(x**2)
 

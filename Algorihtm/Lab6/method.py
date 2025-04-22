@@ -21,13 +21,13 @@ def investigate_search(b, h):
     return b_new
 
 # Метод нулевого порядка
-def method(f, b1, h, eps=1e-5, max_iters=1000):
+def method(f, b1, h, eps=1e-12, max_iters=10000):
     iter_count = 0
     while np.linalg.norm(h) > eps and iter_count < max_iters:
         iter_count += 1
         b2 = investigate_search(b1, h)
         if np.array_equal(b2, b1):
-            h = h / 10.0
+            h = h / 2.0
             continue
         else:
             P = b1 + 2 * (b2 - b1)
@@ -41,7 +41,7 @@ def method(f, b1, h, eps=1e-5, max_iters=1000):
 
 # Входные значения
 b1 = np.array([0.0, 0.0])
-h = np.array([1, 1])
+h = np.array([1.0, 1.0])
 
 # Запуск программы
 min_point, min_value = method(f, b1, h)
