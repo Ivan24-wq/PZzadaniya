@@ -2,7 +2,7 @@ import numpy as np
 
 # Функция — принимает вектор x
 def f(x):
-    return (x[0] - 1) * np.sin(x[1]) + 5
+    return 100 * (x[1] - x[0]**2)**2 + (1 - x[0])**2
 
 # Метод исследования
 def investigate_search(b, h):
@@ -35,11 +35,13 @@ def method(f, b1, h, eps=1e-5, max_iters=1000):
                 b1 = P
             else:
                 b1 = b2
+        if iter_count % 100 == 0:  
+            print(f"Итерация {iter_count}: x = {b1}, f(x) = {f(b1):.5f}")        
     return b1, f(b1)
 
 # Входные значения
 b1 = np.array([0.0, 0.0])
-h = np.array([1.0, 1.0])
+h = np.array([1, 1])
 
 # Запуск программы
 min_point, min_value = method(f, b1, h)
