@@ -6,8 +6,8 @@ def fft(x):
     N = len(x)
     if N == 1:
         return x
-    if(N & (N - 1)) != 0:
-        raise ValueError("Длина массива {N} должна быть степенью двойки")
+    if (N & (N - 1)) != 0:
+        raise ValueError(f"Длина массива {N} должна быть степенью двойки")
     even = fft(x[::2])
     odd = fft(x[1::2])
     W = [np.exp(-2j * np.pi * k / N) * odd[k] for k in range(N // 2)]
@@ -16,34 +16,31 @@ def fft(x):
     return X
 
 # Генерация сигнала
-N = 32
-x = np.linspace(0, 2 * np.pi, N, endpoint=False)
-y = np.sin(x**3)
+N = 1024
+x = np.linspace(-np.pi, np.pi, N, endpoint=False)
+y = np.where((-np.pi / 2 <= x) & (x <= np.pi / 2), -1, 1)
 
 # Применим БПФ
 Y = fft(y)
 amplitude = np.abs(Y)
 
-# Построим графики
-plt.figure(figsize=(12, 5))
+# Вычисляем частотную ось
+frequencies = np.fft.fftfreq(N, d=(2 * np.pi / N))
 
-# Сигнал
-plt.subplot(1, 2, 1)
-plt.plot(x, y, color='red', label="БПФ: sin(x³)")
-plt.title("Быстрый Фурье")
-plt.xlabel("x")
-plt.ylabel("y")
+# Берём только положительные частоты
+positive_freqs = frequencies[:N // 2]
+positive_amplitude = amplitude[:N // 2]
+
+# Построим график амплитуды спектра для положительных частот
+plt.figure(figsize=(10, 5))
+
+plt.plot(positive_freqs, positive_amplitude, color="blue", label="Амплитудный спектр")
+plt.title("Амплитудный спектр сигнала (Положительные частоты)")
+plt.xlabel("Частоты (рад/с)")
+plt.ylabel("Амплитуда")
 plt.grid(True)
 plt.legend()
 
-
-# Амплитуда
-plt.subplot(1, 2, 2)
-plt.stem(range(N), amplitude)  
-plt.title("Амплитудный спектр ")
-plt.xlabel("Частотный индекс k")
-plt.ylabel("Амплитуда")
-plt.grid(True)
-
 plt.tight_layout()
 plt.show()
+
