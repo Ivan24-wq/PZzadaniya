@@ -24,8 +24,8 @@ prob.solve()
 
 #Вывод результата
 print("Оптимальное количество домов: ")
-print(f"x1 (Д1) = {x1.varValue:.1f}")
-print(f"x2 (Д2) = {x2.varValue:.1f}")
-print(f"x3 (Д3) = {x3.varValue:.1f}")
-print(f"x4 (Д4) = {x4.varValue:.1f}")
+print(f"x1 (Д1) = {x1.varValue:.1f} Домов")
+print(f"x2 (Д2) = {x2.varValue:.1f} Домов")
+print(f"x3 (Д3) = {x3.varValue:.1f} Домов")
+print(f"x4 (Д4) = {x4.varValue:.1f} Домов")
 print(f"Минимальная себестоимость: {pulp.value(prob.objective):,.2f} тыс руб")
