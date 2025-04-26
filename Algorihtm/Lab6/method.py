@@ -41,7 +41,7 @@ def method(f, b1, h, eps=1e-12, max_iters=10000):
 
 # Входные значения
 b1 = np.array([0.0, 0.0])
-h = np.array([1.0, 1.0])
+h = np.array([0.01, 0.01])
 
 # Запуск программы
 min_point, min_value = method(f, b1, h)
