@@ -3,16 +3,15 @@ import matplotlib.pyplot as plt
 
 # Входные данные
 def f(x):
-    return np.exp(x) + x
+    return x**2
 
 # Первая производная
 def gradient_f(x):
-    return np.exp(x) + 1
+    return 2 * x
 
 # Вторая производная
 def hessian_f(x):
-    return np.exp(x)
-
+    return 2
 # Метод Ньютона (второго порядка)
 def Newton(f, gradient_f, hessian_f, x0, eps=1e-6, max_iter=1000):
     x = x0
@@ -40,7 +39,7 @@ def Newton(f, gradient_f, hessian_f, x0, eps=1e-6, max_iter=1000):
     return x
 
 # Начальное приближение
-x0 = -1.0
+x0 = 5
 
 # Ищем локальный минимум
 res = Newton(f, gradient_f, hessian_f, x0)
