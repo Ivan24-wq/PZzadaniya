@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 # Входные данные
 def f(x):
-    return x**2
+    return (x**2) + 2
 
 # Первая производная
 def gradient_f(x):
@@ -39,7 +39,7 @@ def Newton(f, gradient_f, hessian_f, x0, eps=1e-6, max_iter=1000):
     return x
 
 # Начальное приближение
-x0 = 5
+x0 = -5
 
 # Ищем локальный минимум
 res = Newton(f, gradient_f, hessian_f, x0)
