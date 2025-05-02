@@ -1,57 +1,38 @@
+from pulp import LpProblem, LpMaximize, LpVariable, LpInteger, lpSum, value, LpBinary
 # Словарь с предметами
 stuffdict = {
-    'диван': (5, 600),
-    'ПК': (3, 1000),
-    'ноутбук': (0.5, 1100),
-    'холодильник': (1, 800),
-    'стол': (2, 30),
-    'вклосипед': (2, 100),
-    'стулья': (2, 100)
+    'палатка': (5, 60),
+    'спальный мешок': (2, 40),
+    'котелок': (2, 30),
+    'фонарик': (1, 50), 
+    'аптечка': (4, 50),
+    'верёвка': (2, 35)
 }
 
-# Извлекаем данные
-names = list(stuffdict.keys())
-size = [stuffdict[name][0] for name in names]
-value = [stuffdict[name][1] for name in names]
-max_size = 20
+def zadacha():
+    prob = LpProblem("Рюкзак туриста", LpMaximize)
 
-size = [int(s * 2) for s in size]  
-max_size_scaled = max_size * 2  
+    #Список название предметов
+    items = list(stuffdict.keys())
 
-# Алгоритм рюкзака
-def knapsack(size, value, max_size):
-    n = len(size)
-    dp = [[0] * (max_size + 1) for _ in range(n + 1)]
-    
-    for i in range(1, n + 1):
-        for s in range(1, max_size + 1):
-            if size[i-1] <= s:
-                dp[i][s] = max(dp[i-1][s], dp[i-1][s - size[i-1]] + value[i-1])
-            else:
-                dp[i][s] = dp[i-1][s]
-    
-    # Восстановление предметов
-    selected = []
-    s = max_size
-    for i in range(n, 0, -1):
-        if dp[i][s] != dp[i-1][s]:
-            selected.append(i-1)
-            s -= size[i-1]
-    
-    return dp[n][max_size], selected
+    #Бинарные переменные
+    item_vars = {name: LpVariable(name, cat=LpBinary) for name in items}
+    #Целевая функция
+    prob += lpSum(stuffdict[name][1] * item_vars[name] for name in items)
+    prob += lpSum(stuffdict[name][0] * item_vars[name] for name in items) <= 10
 
-# Решение задачи
-max_value, items = knapsack(size, value, max_size_scaled)
+    #решаем задачу
+    prob.solve()
 
-# Вывод результатов 
-print(f"Максимальная ценность: {max_value} $")
-print("Выбранные предметы:")
-total_size = 0
-for i in items:
-    name = names[i]
-    item_size = size[i] / 2  
-    item_value = value[i]
-    total_size += item_size
-    print(f"  - {name}: {item_size} м², {item_value} $")
+    #Вывод
+    print("Решение: ")
+    total_weight = 0
+    for name in items:
+        if item_vars[name].value() == 1:
+            weight, value_item = stuffdict[name]
+            print(f"Взять: {name}(вес {weight}, ценность: {value_item})")
+            total_weight += weight
+    print(f"общий вес: {total_weight}")
+    print(f"общая ценность: {value(prob.objective)}")
 
-print(f"Общая площадь: {total_size} м²")
+zadacha()
