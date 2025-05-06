@@ -1,6 +1,7 @@
 import numpy as np
 import random
 import math
+import matplotlib.pyplot as plt
 
 #Города
 cities = {
@@ -35,23 +36,33 @@ MUTTATION_RATE = 0.05 #Вероятность мутаций
 lattitude - широта
 longitude - долгота """
 def distance(a1, a2):
-    lattitude1, longitude1 = city[a1]
-    lattitude2, longitude2 = city[a2]
-    return math.hypot(lattitude2 - lattitude1, longitude2 - longitude11)
+    from math import radians, sin, cos, sqrt, atan2
+
+    R = 6371  # Радиус Земли в километрах
+
+    lat1, lon1 = map(radians, cities[a1])
+    lat2, lon2 = map(radians, cities[a2])
+
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+
+    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+    return R * c
 #Функция для общего маршрута
 def total_distance(tour):
     dist = 0
     for i in range(NUM_CITIES):
-        dist += distance(tour[i], tour[i+1] % NUM_CITIES) 
+        dist += distance(tour[i], tour[(i+1) % NUM_CITIES]) 
     return dist
 
 #Старт алгоритма(выбираем начальную точку старта)
-def population():
+def populations():
     return[random.sample(city_names, NUM_CITIES) for _ in range(POP_SIZE)]
 
 #Выбор лучших генов(селекция)
-def seletction(population):
-    return min(random.sample(populayion, 5), key = total_distance)
+def selection(population):
+    return min(random.sample(population, 5), key = total_distance)
 
 #Строим новый маршрут
 def crossover(b1, b2):
@@ -74,4 +85,21 @@ def mutate(tour):
     if random.random() < MUTTATION_RATE:
         i, j = random.sample(range(NUM_CITIES), 2)
         tour[i], tour[j] = tour[j], tour[i]
-    return tour    
+    return tour
+
+
+#Случайная перестановка городов
+population = populations()
+for gen in range(GENERATIONS):
+    new_population = []
+    parent1 = selection(population)
+    parent2 = selection(population)
+    child = crossover(parent1, parent2)
+    child = mutate(child)
+    new_population.append(child)
+population = new_population #Обновление популяции
+best = min(population, key= total_distance)
+
+if gen % 30 == 1 or gen == GENERATIONS - 1:
+    print(f"Поколение: {gen}: Лучшая длина маршрута: {total_distance(best):.2f}")
+    
